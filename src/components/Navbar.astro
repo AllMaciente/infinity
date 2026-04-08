@@ -1,0 +1,88 @@
+---
+import CartButton from "./CartButton.astro";
+import Logo from "./Logo.astro";
+
+const navLinks = [
+  { href: "/", label: "Início" },
+  { href: "/loja", label: "Loja" },
+];
+---
+
+<header class="bg-white border-b border-gray-200 sticky top-0 z-50">
+  <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-16">
+      <a href="/" class="flex items-center gap-3 group">
+        <div
+          class="w-10 h-10 bg-primary rounded-full flex items-center justify-center group-hover:bg-accent transition-colors duration-300 p-1.5"
+        >
+          <Logo size="sm" variant="light" />
+        </div>
+        <span class="font-display font-bold text-xl text-primary">INFINITY</span
+        >
+      </a>
+
+      <div class="hidden md:flex items-center gap-8">
+        {
+          navLinks.map((link) => (
+            <a
+              href={link.href}
+              class="text-secondary hover:text-primary transition-colors font-medium"
+            >
+              {link.label}
+            </a>
+          ))
+        }
+      </div>
+
+      <div class="flex items-center gap-4">
+        <CartButton />
+
+        <button
+          id="mobile-menu-btn"
+          class="md:hidden p-2 text-primary hover:bg-gray-100 rounded-md transition-colors"
+          aria-label="Abrir menu"
+        >
+          <svg
+            class="w-6 h-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M4 6h16M4 12h16M4 18h16"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <div
+    id="mobile-menu"
+    class="hidden md:hidden border-t border-gray-200 bg-white"
+  >
+    <div class="container mx-auto px-4 py-4 space-y-3">
+      {
+        navLinks.map((link) => (
+          <a
+            href={link.href}
+            class="block py-2 text-secondary hover:text-primary transition-colors font-medium"
+          >
+            {link.label}
+          </a>
+        ))
+      }
+    </div>
+  </div>
+</header>
+
+<script>
+  const menuBtn = document.getElementById("mobile-menu-btn");
+  const mobileMenu = document.getElementById("mobile-menu");
+
+  menuBtn?.addEventListener("click", () => {
+    mobileMenu?.classList.toggle("hidden");
+  });
+</script>

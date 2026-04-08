@@ -1,0 +1,153 @@
+---
+
+---
+
+<div 
+  id="cart-drawer"
+  class="fixed inset-0 z-50 translate-x-full transition-transform duration-300"
+>
+  <div class="absolute inset-0 bg-black/50" id="cart-overlay"></div>
+  
+  <div class="absolute right-0 top-0 h-full w-full max-w-md bg-white shadow-xl flex flex-col">
+    <div class="flex items-center justify-between p-6 border-b border-gray-200">
+      <h2 class="font-display font-bold text-xl">Carrinho</h2>
+      <button 
+        id="close-cart-btn"
+        class="p-2 hover:bg-gray-100 rounded-md transition-colors"
+        aria-label="Fechar carrinho"
+      >
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+      </button>
+    </div>
+
+    <div id="cart-items" class="flex-1 overflow-y-auto p-6">
+      <div id="empty-cart" class="text-center py-12">
+        <svg class="w-16 h-16 mx-auto text-gray-light mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
+        </svg>
+        <p class="text-gray mb-4">Seu carrinho está vazio</p>
+        <a href="/loja" class="btn btn-primary">Ver produtos</a>
+      </div>
+      
+      <div id="cart-list" class="space-y-4 hidden"></div>
+    </div>
+
+    <div id="cart-footer" class="border-t border-gray-200 p-6 hidden">
+      <div class="flex justify-between items-center mb-4">
+        <span class="text-gray">Subtotal</span>
+        <span id="cart-total" class="font-display font-bold text-xl">R$ 0,00</span>
+      </div>
+      <button class="btn btn-primary w-full">
+        Finalizar Compra
+      </button>
+      <p class="text-center text-sm text-gray mt-3">
+        Frete calculado no checkout
+      </p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { getCart, removeFromCart, updateQuantity, formatPrice } from '../utils/cart';
+
+  function closeCartDrawer() {
+    const drawer = document.getElementById('cart-drawer');
+    if (drawer) {
+      drawer.classList.add('translate-x-full');
+      drawer.classList.remove('translate-x-0');
+      document.body.style.overflow = '';
+    }
+  }
+
+  document.getElementById('close-cart-btn')?.addEventListener('click', closeCartDrawer);
+  document.getElementById('cart-overlay')?.addEventListener('click', closeCartDrawer);
+
+  function renderCart() {
+    const cart = getCart();
+    const emptyCart = document.getElementById('empty-cart');
+    const cartList = document.getElementById('cart-list');
+    const cartFooter = document.getElementById('cart-footer');
+    const cartTotal = document.getElementById('cart-total');
+
+    if (cart.items.length === 0) {
+      emptyCart?.classList.remove('hidden');
+      cartList?.classList.add('hidden');
+      cartFooter?.classList.add('hidden');
+      return;
+    }
+
+    emptyCart?.classList.add('hidden');
+    cartList?.classList.remove('hidden');
+    cartFooter?.classList.remove('hidden');
+
+    if (cartList) {
+      cartList.innerHTML = cart.items.map(item => `
+        <div class="flex gap-4 p-4 bg-gray-50 rounded-lg" data-item-id="${item.id}">
+          <div class="w-20 h-20 bg-gray-200 rounded-lg flex-shrink-0 flex items-center justify-center overflow-hidden">
+            <img src="${item.image}" alt="${item.name}" class="w-full h-full object-cover" onerror="this.style.display='none'; this.parentElement.innerHTML='<svg class=\\'w-8 h-8 text-gray-400\\' fill=\\'none\\' stroke=\\'currentColor\\' viewBox=\\'0 0 24 24\\'><path stroke-linecap=\\'round\\' stroke-linejoin=\\'round\\' stroke-width=\\'1.5\\' d=\\'M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4\\'/></svg>'" />
+          </div>
+          <div class="flex-1 min-w-0">
+            <h3 class="font-medium text-sm truncate">${item.name}</h3>
+            <p class="text-accent font-bold">${formatPrice(item.price)}</p>
+            <div class="flex items-center gap-2 mt-2">
+              <button class="quantity-btn w-8 h-8 bg-white border border-gray-200 rounded flex items-center justify-center hover:bg-gray-100 transition-colors" data-action="decrease" data-id="${item.id}">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"/>
+                </svg>
+              </button>
+              <span class="w-8 text-center font-medium">${item.quantity}</span>
+              <button class="quantity-btn w-8 h-8 bg-white border border-gray-200 rounded flex items-center justify-center hover:bg-gray-100 transition-colors" data-action="increase" data-id="${item.id}">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                </svg>
+              </button>
+              <button class="remove-btn ml-auto text-gray hover:text-red-500 transition-colors" data-id="${item.id}">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+
+      cartList.querySelectorAll('.quantity-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const target = e.currentTarget as HTMLElement;
+          const id = parseInt(target.dataset.id || '0');
+          const action = target.dataset.action;
+          const item = cart.items.find(i => i.id === id);
+          
+          if (item) {
+            if (action === 'increase') {
+              updateQuantity(id, item.quantity + 1);
+            } else {
+              updateQuantity(id, item.quantity - 1);
+            }
+            renderCart();
+          }
+        });
+      });
+
+      cartList.querySelectorAll('.remove-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const target = e.currentTarget as HTMLElement;
+          const id = parseInt(target.dataset.id || '0');
+          removeFromCart(id);
+          renderCart();
+        });
+      });
+    }
+
+    if (cartTotal) {
+      const total = cart.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+      cartTotal.textContent = formatPrice(total);
+    }
+  }
+
+  renderCart();
+
+  window.addEventListener('cart-updated', renderCart);
+</script>

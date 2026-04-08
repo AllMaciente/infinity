@@ -1,0 +1,310 @@
+---
+import MainLayout from "../layouts/MainLayout.astro";
+import ProductCard from "../components/ProductCard.astro";
+import Logo from "../components/Logo.astro";
+import company from "../data/company.json";
+import products from "../data/products.json";
+
+const featuredProducts = products.filter((p) => p.featured).slice(0, 4);
+---
+
+<MainLayout title="Início">
+  <section
+    class="relative bg-gradient-to-br from-primary via-secondary to-primary overflow-hidden p-10"
+  >
+    <div class="absolute inset-0 opacity-10">
+      <div
+        class="absolute top-20 left-10 w-64 h-64 bg-accent rounded-full blur-3xl"
+      >
+      </div>
+      <div
+        class="absolute bottom-20 right-10 w-96 h-96 bg-accent rounded-full blur-3xl"
+      >
+      </div>
+    </div>
+
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-32 relative">
+      <div class="max-w-3xl">
+        <div
+          class="inline-flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full mb-6"
+        >
+          <span class="w-2 h-2 bg-accent rounded-full animate-pulse"></span>
+          <span class="text-white/80 text-sm font-medium"
+            >Energia que se renova infinitamente</span
+          >
+        </div>
+
+        <h1
+          class="font-display font-bold text-4xl sm:text-5xl lg:text-6xl text-white mb-6 leading-tight"
+        >
+          Tecnologia de <span class="text-accent">Levitação Magnética</span>
+        </h1>
+
+        <p
+          class="text-white/70 text-lg sm:text-xl mb-8 max-w-2xl leading-relaxed"
+        >
+          Geradores que se autobombeiam usando indução eletromagnética. Sem
+          combustível, sem ruído, sem emissão. Apenas energia limpa e
+          sustentável.
+        </p>
+
+        <div class="flex flex-col sm:flex-row gap-4">
+          <a href="/loja" class="btn btn-primary text-lg px-8 py-4">
+            Ver Produtos
+            <svg
+              class="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+            </svg>
+          </a>
+          <a
+            href="#sobre"
+            class="btn bg-white/10 text-white hover:bg-white/20 border border-white/20 text-lg px-8 py-4"
+          >
+            Saiba Mais
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="py-16 lg:py-24 bg-white">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div
+        class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center"
+      >
+        <div>
+          <span
+            class="text-accent font-semibold text-sm uppercase tracking-wider"
+            >Tecnologia</span
+          >
+          <h2 class="font-display font-bold text-3xl sm:text-4xl mt-2 mb-6">
+            Como Funciona
+          </h2>
+          <p class="text-gray mb-8 leading-relaxed">
+            Nossos geradores utilizam física avançada de indução eletromagnética
+            e levitação magnética para gerar energia. Sem atrito, sem peças
+            móveis tradicionais, sem necessidade de combustível.
+          </p>
+
+          <div class="space-y-6">
+            <div class="flex gap-4">
+              <div
+                class="w-12 h-12 bg-accent/10 rounded-lg flex items-center justify-center flex-shrink-0"
+              >
+                <svg
+                  class="w-6 h-6 text-accent"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                </svg>
+              </div>
+              <div>
+                <h3 class="font-display font-semibold text-lg mb-1">
+                  Auto-carregamento
+                </h3>
+                <p class="text-gray text-sm">
+                  O sistema magnético se autobombeia continuamente, gerando
+                  energia sem intervenção externa.
+                </p>
+              </div>
+            </div>
+
+            <div class="flex gap-4">
+              <div
+                class="w-12 h-12 bg-accent/10 rounded-lg flex items-center justify-center flex-shrink-0"
+              >
+                <svg
+                  class="w-6 h-6 text-accent"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M5 13l4 4L19 7"></path>
+                </svg>
+              </div>
+              <div>
+                <h3 class="font-display font-semibold text-lg mb-1">
+                  Zero Emissão
+                </h3>
+                <p class="text-gray text-sm">
+                  100% renovável e sustentável. Sem queimação de combustíveis
+                  fósseis ou gases nocivos.
+                </p>
+              </div>
+            </div>
+
+            <div class="flex gap-4">
+              <div
+                class="w-12 h-12 bg-accent/10 rounded-lg flex items-center justify-center flex-shrink-0"
+              >
+                <svg
+                  class="w-6 h-6 text-accent"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                  ></path>
+                </svg>
+              </div>
+              <div>
+                <h3 class="font-display font-semibold text-lg mb-1">
+                  Durabilidade
+                </h3>
+                <p class="text-gray text-sm">
+                  Levitação magnética significa ausência de atrito. Peças que
+                  não se tocam duram eternamente.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="relative">
+          <div
+            class="aspect-square bg-gradient-to-br from-gray-100 to-gray-200 rounded-3xl flex items-center justify-center"
+          >
+            <div
+              class="w-48 h-48 bg-white rounded-full flex items-center justify-center shadow-2xl p-8"
+            >
+              <Logo size="full" variant="dark" />
+            </div>
+          </div>
+          <div
+            class="absolute -top-4 -right-4 w-24 h-24 bg-accent/20 rounded-full blur-xl"
+          >
+          </div>
+          <div
+            class="absolute -bottom-4 -left-4 w-32 h-32 bg-primary/10 rounded-full blur-xl"
+          >
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="py-16 lg:py-24">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-12">
+        <span class="text-accent font-semibold text-sm uppercase tracking-wider"
+          >Produtos</span
+        >
+        <h2 class="font-display font-bold text-3xl sm:text-4xl mt-2 mb-4">
+          Produtos em Destaque
+        </h2>
+        <p class="text-gray max-w-2xl mx-auto">
+          Conheça nossa linha de geradores magnéticos desenvolvidos com
+          tecnologia de ponta para diversas aplicações.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        {featuredProducts.map((product) => <ProductCard {...product} />)}
+      </div>
+
+      <div class="text-center mt-12">
+        <a href="/loja" class="btn btn-secondary">
+          Ver Todos os Produtos
+          <svg
+            class="w-5 h-5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section id="sobre" class="py-16 lg:py-24 bg-white">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="max-w-4xl mx-auto text-center">
+        <span class="text-accent font-semibold text-sm uppercase tracking-wider"
+          >Sobre Nós</span
+        >
+        <h2 class="font-display font-bold text-3xl sm:text-4xl mt-2 mb-6">
+          {company.name}
+        </h2>
+        <p class="text-gray text-lg mb-8 leading-relaxed">
+          {company.description}
+        </p>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-8 mt-12">
+          <div class="p-6 bg-gray-50 rounded-xl">
+            <div class="font-display font-bold text-4xl text-accent mb-2">
+              100%
+            </div>
+            <div class="text-gray">Energia Renovável</div>
+          </div>
+          <div class="p-6 bg-gray-50 rounded-xl">
+            <div class="font-display font-bold text-4xl text-accent mb-2">
+              0dB
+            </div>
+            <div class="text-gray">Ruído Operacional</div>
+          </div>
+          <div class="p-6 bg-gray-50 rounded-xl">
+            <div class="font-display font-bold text-4xl text-accent mb-2">
+              {company.founded}
+            </div>
+            <div class="text-gray">Ano de Fundação</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="py-16 lg:py-24 bg-primary text-white">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h2 class="font-display font-bold text-3xl sm:text-4xl mb-4">
+        Pronto para começar?
+      </h2>
+      <p class="text-white/70 text-lg mb-8 max-w-2xl mx-auto">
+        Explore nossa loja e descubra como a energia magnética pode transformar
+        sua vida.
+      </p>
+      <a href="/loja" class="btn btn-primary text-lg px-8 py-4">
+        Acessar Loja
+        <svg
+          class="w-5 h-5"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+        </svg>
+      </a>
+    </div>
+  </section>
+</MainLayout>

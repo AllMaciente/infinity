@@ -1,0 +1,131 @@
+---
+import MainLayout from "../../layouts/MainLayout.astro";
+import ProductGrid from "../../components/ProductGrid.astro";
+import SearchBar from "../../components/SearchBar.astro";
+import CategoryFilter from "../../components/CategoryFilter.astro";
+import Pagination from "../../components/Pagination.astro";
+import products from "../../data/products.json";
+
+const ITEMS_PER_PAGE = 9;
+
+const url = Astro.url;
+const searchQuery = url.searchParams.get("q")?.toLowerCase() || "";
+const activeCategory = url.searchParams.get("categoria") || "";
+const currentPage = parseInt(url.searchParams.get("pagina") || "1");
+
+let filteredProducts = [...products];
+
+if (searchQuery) {
+  filteredProducts = filteredProducts.filter(
+    (p) =>
+      p.name.toLowerCase().includes(searchQuery) ||
+      p.description.toLowerCase().includes(searchQuery) ||
+      p.shortDescription?.toLowerCase().includes(searchQuery),
+  );
+}
+
+if (activeCategory) {
+  filteredProducts = filteredProducts.filter(
+    (p) => p.category === activeCategory,
+  );
+}
+
+const categories = [...new Set(products.map((p) => p.category))].map((cat) => ({
+  slug: cat,
+  name: cat.charAt(0).toUpperCase() + cat.slice(1).replace("-", " "),
+  count: products.filter((p) => p.category === cat).length,
+}));
+
+const totalPages = Math.ceil(filteredProducts.length / ITEMS_PER_PAGE);
+const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+const paginatedProducts = filteredProducts.slice(
+  startIndex,
+  startIndex + ITEMS_PER_PAGE,
+);
+
+const title = searchQuery
+  ? `Busca: "${searchQuery}"`
+  : activeCategory
+    ? categories.find((c) => c.slug === activeCategory)?.name || "Produtos"
+    : "Loja";
+---
+
+<MainLayout title={title}>
+  <div class="bg-primary py-12 lg:py-16">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+      <h1 class="font-display font-bold text-3xl sm:text-4xl text-white mb-4">
+        Nossa Loja
+      </h1>
+      <p class="text-white/70">
+        {filteredProducts.length} produto{
+          filteredProducts.length !== 1 ? "s" : ""
+        } encontrado{filteredProducts.length !== 1 ? "s" : ""}
+      </p>
+    </div>
+  </div>
+
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 p-10">
+    <div class="flex flex-col lg:flex-row gap-8 mb-8 p-10">
+      <div class="lg:w-80 flex-shrink-0">
+        <div class="sticky top-24 space-y-6">
+          <div>
+            <label class="block text-sm font-medium text-secondary mb-2"
+              >Buscar</label
+            >
+            <SearchBar value={searchQuery} />
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-secondary mb-2"
+              >Categorias</label
+            >
+            <CategoryFilter
+              categories={categories}
+              activeCategory={activeCategory}
+            />
+          </div>
+
+          {
+            (searchQuery || activeCategory) && (
+              <a
+                href="/loja"
+                class="text-sm text-accent hover:underline flex items-center gap-1"
+              >
+                <svg
+                  class="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+                Limpar filtros
+              </a>
+            )
+          }
+        </div>
+      </div>
+
+      <div class="flex-1">
+        <ProductGrid products={paginatedProducts} columns={3} />
+
+        {
+          filteredProducts.length > ITEMS_PER_PAGE && (
+            <div class="mt-12">
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                baseUrl="/loja"
+              />
+            </div>
+          )
+        }
+      </div>
+    </div>
+  </div>
+</MainLayout>

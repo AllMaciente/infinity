@@ -1,0 +1,217 @@
+---
+import MainLayout from '../../layouts/MainLayout.astro';
+import { formatPrice } from '../../utils/cart';
+import products from '../../data/products.json';
+
+export function getStaticPaths() {
+  return products.map(product => ({
+    params: { slug: product.slug },
+    props: { product }
+  }));
+}
+
+const { product } = Astro.props;
+
+const relatedProducts = products
+  .filter(p => p.category === product.category && p.id !== product.id)
+  .slice(0, 4);
+
+const hasDiscount = product.originalPrice && product.originalPrice > product.price;
+const discountPercent = hasDiscount ? Math.round((1 - product.price / product.originalPrice!) * 100) : 0;
+const isInStock = product.stock > 0;
+const isLowStock = product.stock > 0 && product.stock <= 5;
+
+const categoryName = product.category.charAt(0).toUpperCase() + product.category.slice(1).replace('-', ' ');
+---
+
+<MainLayout title={product.name} description={product.description}>
+  <nav class="bg-gray-50 border-b border-gray-200">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-3">
+      <ol class="flex items-center gap-2 text-sm">
+        <li>
+          <a href="/" class="text-gray hover:text-primary transition-colors">Início</a>
+        </li>
+        <li class="text-gray-light">/</li>
+        <li>
+          <a href="/loja" class="text-gray hover:text-primary transition-colors">Loja</a>
+        </li>
+        <li class="text-gray-light">/</li>
+        <li>
+          <a href={`/loja?categoria=${product.category}`} class="text-gray hover:text-primary transition-colors">
+            {categoryName}
+          </a>
+        </li>
+        <li class="text-gray-light">/</li>
+        <li class="text-primary font-medium truncate max-w-[200px]">{product.name}</li>
+      </ol>
+    </div>
+  </nav>
+
+  <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16">
+      <div class="relative">
+        <div class="aspect-square bg-gray-100 rounded-2xl overflow-hidden">
+          <img 
+            src={product.image}
+            alt={product.name}
+            class="w-full h-full object-cover"
+            onerror={`this.src='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect fill="%23e5e7eb" width="100" height="100"/><text x="50" y="50" text-anchor="middle" dy=".3em" fill="%239d9d9d" font-size="10">Sem imagem</text></svg>'`}
+          />
+        </div>
+        
+        {hasDiscount && (
+          <span class="absolute top-4 left-4 bg-red-500 text-white font-bold px-4 py-2 rounded-lg">
+            -{discountPercent}% OFF
+          </span>
+        )}
+      </div>
+
+      <div>
+        <div class="mb-4">
+          <span class="badge badge-accent">{categoryName}</span>
+        </div>
+        
+        <h1 class="font-display font-bold text-3xl lg:text-4xl mb-4">
+          {product.name}
+        </h1>
+        
+        <div class="flex items-center gap-3 mb-6">
+          {isInStock ? (
+            isLowStock ? (
+              <span class="badge badge-warning">
+                Apenas {product.stock} unidades
+              </span>
+            ) : (
+              <span class="badge badge-success">
+                Em estoque
+              </span>
+            )
+          ) : (
+            <span class="badge badge-error">
+              Esgotado
+            </span>
+          )}
+        </div>
+        
+        <div class="flex items-end gap-3 mb-6">
+          <span class="font-display font-bold text-4xl text-accent">
+            {formatPrice(product.price)}
+          </span>
+          {hasDiscount && (
+            <span class="text-xl text-gray-light line-through">
+              {formatPrice(product.originalPrice!)}
+            </span>
+          )}
+        </div>
+        
+        <p class="text-gray leading-relaxed mb-8">
+          {product.description}
+        </p>
+
+        <div class="border-t border-b border-gray-200 py-6 mb-8">
+          <h2 class="font-display font-semibold text-lg mb-4">Especificações</h2>
+          <dl class="grid grid-cols-2 gap-4">
+            {product.specs && Object.entries(product.specs).map(([key, value]) => (
+              <div>
+                <dt class="text-sm text-gray capitalize">{key.replace(/([A-Z])/g, ' $1').trim()}</dt>
+                <dd class="font-medium">{value}</dd>
+              </div>
+            ))}
+          </dl>
+        </div>
+
+        <div class="flex flex-col sm:flex-row gap-4">
+          <button 
+            id="add-to-cart-btn"
+            class="flex-1 btn btn-primary text-lg py-4 disabled:opacity-50 disabled:cursor-not-allowed"
+            data-id={product.id}
+            data-slug={product.slug}
+            data-name={product.name}
+            data-price={product.price}
+            data-image={product.image}
+            disabled={!isInStock}
+          >
+            {isInStock ? 'Adicionar ao Carrinho' : 'Indisponível'}
+          </button>
+          
+          <a href="/loja" class="btn btn-outline py-4">
+            Continuar Comprando
+          </a>
+        </div>
+      </div>
+    </div>
+
+    {relatedProducts.length > 0 && (
+      <section class="mt-16 lg:mt-24">
+        <h2 class="font-display font-bold text-2xl mb-8">Produtos Relacionados</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {relatedProducts.map(p => (
+            <article class="card group">
+              <a href={`/loja/${p.slug}`} class="block">
+                <div class="aspect-square bg-gray-100 overflow-hidden">
+                  <img 
+                    src={p.image}
+                    alt={p.name}
+                    class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                    onerror={`this.src='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect fill="%23e5e7eb" width="100" height="100"/></svg>'`}
+                  />
+                </div>
+                <div class="p-4">
+                  <h3 class="font-display font-semibold text-lg group-hover:text-accent transition-colors line-clamp-1">
+                    {p.name}
+                  </h3>
+                  <p class="font-bold text-accent mt-2">{formatPrice(p.price)}</p>
+                </div>
+              </a>
+            </article>
+          ))}
+        </div>
+      </section>
+    )}
+  </main>
+</MainLayout>
+
+<script>
+  import { addToCart, getCartItemCount } from '../../utils/cart';
+
+  const btn = document.getElementById('add-to-cart-btn');
+  
+  btn?.addEventListener('click', () => {
+    if ((btn as HTMLButtonElement).disabled) return;
+    
+    const product = {
+      id: parseInt(btn.dataset.id || '0'),
+      slug: btn.dataset.slug || '',
+      name: btn.dataset.name || '',
+      price: parseFloat(btn.dataset.price || '0'),
+      image: btn.dataset.image || ''
+    };
+    
+    addToCart(product);
+    
+    const originalText = btn.textContent;
+    btn.textContent = 'Adicionado!';
+    btn.classList.add('bg-green-500');
+    
+    setTimeout(() => {
+      btn.textContent = originalText;
+      btn.classList.remove('bg-green-500');
+    }, 1500);
+    
+    const count = getCartItemCount();
+    const badge = document.getElementById('cart-count');
+    if (badge) {
+      badge.textContent = count.toString();
+      badge.style.display = count > 0 ? 'flex' : 'none';
+    }
+  });
+</script>
+
+<style>
+  .line-clamp-1 {
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+</style>

@@ -1,0 +1,192 @@
+[
+  {
+    "id": 1,
+    "slug": "gerador-magnetico-g1",
+    "name": "Gerador Magnético G1",
+    "shortDescription": "Gerador compacto ideal para uso residencial",
+    "description": "O Gerador Magnético G1 é a solução perfeita para quem busca autonomia energética. Com tecnologia de fluxo magnético que se autocarrega, proporciona energia limpa e silenciosa. Ideal para residências, escritórios e pequenos comércios. Design moderno em branco com estrutura modular reforçada.",
+    "price": 2499.90,
+    "originalPrice": 2999.90,
+    "image": "/products/gerador-g1.png",
+    "category": "geradores",
+    "stock": 12,
+    "specs": {
+      "potencia": "500W",
+      "tensao": "110V/220V",
+      "peso": "3.5kg",
+      "dimensoes": "25x25x30cm"
+    },
+    "featured": true
+  },
+  {
+    "id": 2,
+    "slug": "gerador-magnetico-g2-pro",
+    "name": "Gerador Magnético G2 Pro",
+    "shortDescription": "Potência profissional para médias demandas",
+    "description": "O G2 Pro foi desenvolvido para atender demandas médias de energia. Com capacidade ampliada e sistema de levitação magnética avançada, oferece maior eficiência e vida útil prolongada. Perfeito para comércios, clínicas e pequenas indústrias.",
+    "price": 4999.90,
+    "originalPrice": 5999.90,
+    "image": "/products/gerador-g2-pro.png",
+    "category": "geradores",
+    "stock": 8,
+    "specs": {
+      "potencia": "1500W",
+      "tensao": "220V",
+      "peso": "8kg",
+      "dimensoes": "40x35x45cm"
+    },
+    "featured": true
+  },
+  {
+    "id": 3,
+    "slug": "gerador-magnetico-g3-industrial",
+    "name": "Gerador Magnético G3 Industrial",
+    "shortDescription": "Alta potência para aplicações industriais",
+    "description": "O G3 Industrial é nossa solução de alta performance. Desenvolvido para atender hospitais, factories e grandes eventos, oferece potência excepcional com manutenção mínima. Sistema de auto-carregamento inteligente com monitoramento digital.",
+    "price": 12999.90,
+    "originalPrice": 15999.90,
+    "image": "/products/gerador-g3-industrial.png",
+    "category": "geradores",
+    "stock": 3,
+    "specs": {
+      "potencia": "5000W",
+      "tensao": "220V/380V",
+      "peso": "25kg",
+      "dimensoes": "60x50x70cm"
+    },
+    "featured": true
+  },
+  {
+    "id": 4,
+    "slug": "bateria-magnetica-bm100",
+    "name": "Bateria Magnética BM100",
+    "shortDescription": "Armazenamento de energia complementar",
+    "description": "A BM100 é uma bateria auxiliar que complementa os geradores Infinity. Com tecnologia de armazenamento magnético, garante energia reserva para momentos de maior demanda. Design compacto e compatível com toda a linha G.",
+    "price": 899.90,
+    "originalPrice": null,
+    "image": "/products/bateria-bm100.png",
+    "category": "acessorios",
+    "stock": 25,
+    "specs": {
+      "capacidade": "100Wh",
+      "tempoCarga": "2h",
+      "peso": "1.2kg",
+      "dimensoes": "15x10x8cm"
+    },
+    "featured": false
+  },
+  {
+    "id": 5,
+    "slug": "kit-monitoramento-smart",
+    "name": "Kit Monitoramento Smart",
+    "shortDescription": "Acompanhe sua energia em tempo real",
+    "description": "O Kit Monitoramento Smart permite acompanhar em tempo real a produção e consumo de energia dos seus geradores Infinity. Aplicativo companion disponível para iOS e Android, com alertas e relatórios de economia.",
+    "price": 449.90,
+    "originalPrice": 549.90,
+    "image": "/products/kit-monitoramento.png",
+    "category": "acessorios",
+    "stock": 18,
+    "specs": {
+      "conectividade": "Wi-Fi/Bluetooth",
+      "aplicativo": "iOS/Android",
+      "peso": "0.3kg",
+      "dimensoes": "10x5x3cm"
+    },
+    "featured": false
+  },
+  {
+    "id": 6,
+    "slug": "carregador-magnetico-cm50",
+    "name": "Carregador Magnético CM50",
+    "shortDescription": "Carregador portátil para baterias BM",
+    "description": "O CM50 é um carregador portátil de alta eficiência para baterias BM100 e BM200. Design compacto com display digital, permite carregamento em qualquer lugar. Ideal para situações de emergência ou uso em campo.",
+    "price": 349.90,
+    "originalPrice": null,
+    "image": "/products/carregador-cm50.png",
+    "category": "acessorios",
+    "stock": 30,
+    "specs": {
+      "potenciaCarregamento": "50W",
+      "tempoCargaTotal": "3h",
+      "peso": "0.5kg",
+      "dimensoes": "12x8x4cm"
+    },
+    "featured": false
+  },
+  {
+    "id": 7,
+    "slug": "painel-solar-hibrido-ph1",
+    "name": "Painel Solar Híbrido PH1",
+    "shortDescription": "Complemento solar para seus geradores",
+    "description": "O PH1 é um painel solar que complementa a energia dos geradores magnéticos Infinity. Tecnologia híbrida que maximiza a captação de energia solar durante o dia, integrando-se perfeitamente ao sistema de auto-carregamento.",
+    "price": 1899.90,
+    "originalPrice": 2299.90,
+    "image": "/products/painel-solar-ph1.png",
+    "category": "energia-solar",
+    "stock": 15,
+    "specs": {
+      "potencia": "200W",
+      "eficiencia": "22%",
+      "peso": "12kg",
+      "dimensoes": "120x80x4cm"
+    },
+    "featured": true
+  },
+  {
+    "id": 8,
+    "slug": "estabilizador-magnetico-em500",
+    "name": "Estabilizador Magnético EM500",
+    "shortDescription": "Proteção e estabilidade para seus equipos",
+    "description": "O EM500 garante estabilidade na tensão de saída dos seus equipamentos. Essential para proteger dispositivos sensíveis de variações de energia. Tecnologia magnética silenciosa sem uso de óleo ou componentes mecânicos.",
+    "price": 699.90,
+    "originalPrice": null,
+    "image": "/products/estabilizador-em500.png",
+    "category": "acessorios",
+    "stock": 22,
+    "specs": {
+      "potencia": "500VA",
+      "tensaoEntrada": "110V/220V",
+      "peso": "4kg",
+      "dimensoes": "20x15x12cm"
+    },
+    "featured": false
+  },
+  {
+    "id": 9,
+    "slug": "gerador-portatil-gp-mini",
+    "name": "Gerador Portátil GP Mini",
+    "shortDescription": "Energia portátil para qualquer lugar",
+    "description": "O GP Mini é nosso menor gerador, projetado para máxima portabilidade. Perfeito para camping, eventos ao ar livre ou emergência. Cabe em qualquer mochila e fornece energia suficiente para carregar dispositivos múltiplas vezes.",
+    "price": 1299.90,
+    "originalPrice": 1599.90,
+    "image": "/products/gerador-gp-mini.png",
+    "category": "geradores",
+    "stock": 20,
+    "specs": {
+      "potencia": "150W",
+      "tensao": "110V/USB",
+      "peso": "1.5kg",
+      "dimensoes": "18x12x8cm"
+    },
+    "featured": true
+  },
+  {
+    "id": 10,
+    "slug": "kit-instalacao-residencial",
+    "name": "Kit Instalação Residencial",
+    "shortDescription": "Tudo que você precisa para instalar",
+    "description": "Kit completo com todos os componentes necessários para instalação residencial dos geradores G1 e G2 Pro. Inclui cabos, conectores, disjuntores e manual ilustrado. Instalação simplificada que pode ser feita pelo próprio usuário.",
+    "price": 299.90,
+    "originalPrice": 399.90,
+    "image": "/products/kit-instalacao.png",
+    "category": "acessorios",
+    "stock": 50,
+    "specs": {
+      "cabos": "5 metros inclusos",
+      "conectores": "Universal",
+      "peso": "2kg",
+      "dimensoes": "30x20x10cm"
+    },
+    "featured": false
+  }
+]

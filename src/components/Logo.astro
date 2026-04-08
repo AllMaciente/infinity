@@ -1,0 +1,45 @@
+---
+interface Props {
+  size?: "sm" | "md" | "lg" | "full";
+  variant?: "auto" | "dark" | "light";
+}
+
+const { size = "md", variant = "auto" } = Astro.props;
+
+const sizes = {
+  sm: "w-8 h-8",
+  md: "w-10 h-10",
+  lg: "w-12 h-12",
+  full: "w-full h-full",
+};
+
+const sizeClasses = sizes[size];
+---
+
+<div class={`${sizeClasses} logo-container relative`} data-variant={variant}>
+  <img
+    src="/favicon.svg"
+    alt="Logo Infinity"
+    class="w-full h-full object-contain"
+  />
+</div>
+
+<style>
+  .logo-container[data-variant="dark"] img {
+    filter: brightness(0);
+  }
+
+  .logo-container[data-variant="light"] img {
+    filter: brightness(0) invert(1);
+  }
+
+  .logo-container[data-variant="auto"] img {
+    filter: none;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .logo-container[data-variant="auto"] img {
+      filter: brightness(0) invert(1);
+    }
+  }
+</style>

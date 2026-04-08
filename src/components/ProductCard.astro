@@ -1,0 +1,158 @@
+---
+import { formatPrice } from '../utils/cart';
+
+interface Props {
+  id: number;
+  slug: string;
+  name: string;
+  shortDescription?: string;
+  price: number;
+  originalPrice?: number | null;
+  image: string;
+  category: string;
+  stock: number;
+  featured?: boolean;
+}
+
+const { id, slug, name, shortDescription, price, originalPrice, image, stock, featured } = Astro.props;
+
+const hasDiscount = originalPrice && originalPrice > price;
+const discountPercent = hasDiscount ? Math.round((1 - price / originalPrice!) * 100) : 0;
+const isInStock = stock > 0;
+const isLowStock = stock > 0 && stock <= 5;
+---
+
+<article class="card group">
+  <a href={`/loja/${slug}`} class="block">
+    <div class="relative aspect-square bg-gray-100 overflow-hidden">
+      <img 
+        src={image} 
+        alt={name}
+        class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+        onerror={`this.src='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect fill="%23e5e7eb" width="100" height="100"/><text x="50" y="50" text-anchor="middle" dy=".3em" fill="%239d9d9d" font-size="12">Sem imagem</text></svg>'`}
+      />
+      
+      {featured && (
+        <span class="absolute top-3 left-3 badge badge-accent">
+          Destaque
+        </span>
+      )}
+      
+      {hasDiscount && (
+        <span class="absolute top-3 right-3 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded">
+          -{discountPercent}%
+        </span>
+      )}
+    </div>
+    
+    <div class="p-4">
+      <h3 class="font-display font-semibold text-lg mb-1 group-hover:text-accent transition-colors line-clamp-1">
+        {name}
+      </h3>
+      
+      {shortDescription && (
+        <p class="text-gray text-sm mb-3 line-clamp-2">
+          {shortDescription}
+        </p>
+      )}
+      
+      <div class="flex items-center gap-2 mb-3">
+        {isInStock ? (
+          isLowStock ? (
+            <span class="badge badge-warning text-xs">
+              Apenas {stock} un.
+            </span>
+          ) : (
+            <span class="badge badge-success text-xs">
+              Em estoque
+            </span>
+          )
+        ) : (
+          <span class="badge badge-error text-xs">
+            Esgotado
+          </span>
+        )}
+      </div>
+      
+      <div class="flex items-end gap-2">
+        <span class="font-display font-bold text-xl text-accent">
+          {formatPrice(price)}
+        </span>
+        {hasDiscount && (
+          <span class="text-gray-light text-sm line-through">
+            {formatPrice(originalPrice!)}
+          </span>
+        )}
+      </div>
+    </div>
+  </a>
+  
+  <div class="px-4 pb-4">
+    <button 
+      class="add-to-cart-btn w-full btn btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
+      data-id={id}
+      data-slug={slug}
+      data-name={name}
+      data-price={price}
+      data-image={image}
+      disabled={!isInStock}
+    >
+      {isInStock ? 'Adicionar ao Carrinho' : 'Indisponível'}
+    </button>
+  </div>
+</article>
+
+<script>
+  import { addToCart, getCartItemCount } from '../utils/cart';
+
+  document.querySelectorAll('.add-to-cart-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const target = e.currentTarget as HTMLElement;
+      
+      if (target.disabled) return;
+      
+      const product = {
+        id: parseInt(target.dataset.id || '0'),
+        slug: target.dataset.slug || '',
+        name: target.dataset.name || '',
+        price: parseFloat(target.dataset.price || '0'),
+        image: target.dataset.image || ''
+      };
+      
+      addToCart(product);
+      
+      const originalText = target.textContent;
+      target.textContent = 'Adicionado!';
+      target.classList.add('bg-green-500');
+      
+      setTimeout(() => {
+        target.textContent = originalText;
+        target.classList.remove('bg-green-500');
+      }, 1500);
+      
+      const count = getCartItemCount();
+      const badge = document.getElementById('cart-count');
+      if (badge) {
+        badge.textContent = count.toString();
+        badge.style.display = count > 0 ? 'flex' : 'none';
+      }
+    });
+  });
+</script>
+
+<style>
+  .line-clamp-1 {
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+</style>

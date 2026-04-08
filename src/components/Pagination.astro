@@ -1,0 +1,83 @@
+---
+interface Props {
+  currentPage: number;
+  totalPages: number;
+  baseUrl?: string;
+}
+
+const { currentPage, totalPages, baseUrl = '/loja' } = Astro.props;
+
+const prevPage = currentPage > 1 ? currentPage - 1 : null;
+const nextPage = currentPage < totalPages ? currentPage + 1 : null;
+
+const pages: (number | '...')[] = [];
+if (totalPages <= 7) {
+  for (let i = 1; i <= totalPages; i++) pages.push(i);
+} else {
+  pages.push(1);
+  if (currentPage > 3) pages.push('...');
+  for (let i = Math.max(2, currentPage - 1); i <= Math.min(totalPages - 1, currentPage + 1); i++) {
+    pages.push(i);
+  }
+  if (currentPage < totalPages - 2) pages.push('...');
+  pages.push(totalPages);
+}
+
+function getPageUrl(page: number): string {
+  const url = new URL(baseUrl, Astro.url.origin);
+  url.searchParams.set('pagina', page.toString());
+  return url.pathname + url.search;
+}
+---
+
+{totalPages > 1 && (
+  <nav class="flex items-center justify-center gap-2" aria-label="Paginação">
+    <a 
+      href={prevPage ? getPageUrl(prevPage) : '#'}
+      class={`p-2 rounded-lg transition-colors ${
+        prevPage 
+          ? 'hover:bg-gray-100 text-primary' 
+          : 'opacity-50 cursor-not-allowed text-gray-light'
+      }`}
+      aria-disabled={!prevPage}
+      aria-label="Página anterior"
+    >
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+      </svg>
+    </a>
+
+    {pages.map(page => (
+      page === '...' ? (
+        <span class="px-2 text-gray-light">...</span>
+      ) : (
+        <a 
+          href={getPageUrl(page)}
+          class={`w-10 h-10 rounded-lg flex items-center justify-center font-medium transition-colors ${
+            page === currentPage
+              ? 'bg-accent text-primary'
+              : 'hover:bg-gray-100 text-secondary'
+          }`}
+          aria-current={page === currentPage ? 'page' : undefined}
+        >
+          {page}
+        </a>
+      )
+    ))}
+
+    <a 
+      href={nextPage ? getPageUrl(nextPage) : '#'}
+      class={`p-2 rounded-lg transition-colors ${
+        nextPage 
+          ? 'hover:bg-gray-100 text-primary' 
+          : 'opacity-50 cursor-not-allowed text-gray-light'
+      }`}
+      aria-disabled={!nextPage}
+      aria-label="Próxima página"
+    >
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+      </svg>
+    </a>
+  </nav>
+)}

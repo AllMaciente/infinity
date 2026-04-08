@@ -1,0 +1,42 @@
+---
+import '../styles/global.css';
+import BaseLayout from './BaseLayout.astro';
+import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
+import CartDrawer from '../components/CartDrawer.astro';
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description } = Astro.props;
+---
+
+<BaseLayout title={title} description={description}>
+  <Navbar />
+  <main class="flex-1">
+    <slot />
+  </main>
+  <Footer />
+  <CartDrawer />
+  
+  <script>
+    import { getCartItemCount } from '../utils/cart';
+    
+    function updateCartCount() {
+      const count = getCartItemCount();
+      const badge = document.getElementById('cart-count');
+      if (badge) {
+        badge.textContent = count.toString();
+        badge.style.display = count > 0 ? 'flex' : 'none';
+      }
+    }
+    
+    updateCartCount();
+    
+    window.addEventListener('cart-updated', updateCartCount);
+    
+    document.addEventListener('astro:after-swap', updateCartCount);
+  </script>
+</BaseLayout>

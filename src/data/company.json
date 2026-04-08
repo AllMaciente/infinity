@@ -1,0 +1,24 @@
+{
+  "name": "Infinity",
+  "tagline": "Energia que se renova infinitamente",
+  "description": "A Infinity é uma empresa fictícia criada para um projeto escolar. Somos especializados em geradores de fluxo magnético que se autocarregam, baseados na física da indução eletromagnética e levitação magnética, garantindo atrito zero, ausência de ruídos e alta durabilidade.",
+  "mission": "Garantir o fornecimento confiável de energia renovável para manter operações em pleno funcionamento, auxiliando o meio ambiente e criando um futuro sustentável.",
+  "vision": "Ser referência em energia limpa e acessível, permitindo que clientes economizem e invistam seus recursos em outras áreas.",
+  "founded": "2025",
+  "location": "Brasil",
+  "email": "contato@infinity-energy.com",
+  "phone": "+55 (11) 9999-9999",
+  "address": "São Paulo, SP - Brasil",
+  "colors": {
+    "primary": "#131313",
+    "secondary": "#3C3C3C",
+    "gray": "#5D5D5D",
+    "grayLight": "#9D9D9D",
+    "background": "#F8F8F8",
+    "accent": "#EDC531"
+  },
+  "fonts": {
+    "display": "Red Hat Display",
+    "body": "Poppins"
+  }
+}
