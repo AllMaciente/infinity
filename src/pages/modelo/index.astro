@@ -1,76 +1,56 @@
 ---
-// src/pages/index.astro
-import { models } from '../../data/models.ts';
+import MainLayout from "../../layouts/MainLayout.astro";
+import { models } from "../../data/models";
 ---
 
-<!DOCTYPE html>
-<html lang="pt">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Modelos 3D</title>
-    <style>
-      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-      body {
-        font-family: system-ui, sans-serif;
-        background: #f8f7f5;
-        min-height: 100vh;
-        padding: 4rem 2rem;
-      }
-      h1 {
-        font-size: 0.7rem;
-        font-weight: 600;
-        letter-spacing: 0.25em;
-        text-transform: uppercase;
-        color: #999;
-        margin-bottom: 3rem;
-      }
-      .grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-        gap: 1px;
-        background: #e5e5e5;
-        border: 1px solid #e5e5e5;
-        max-width: 900px;
-      }
-      .card {
-        background: #f8f7f5;
-        padding: 2rem 1.5rem;
-        text-decoration: none;
-        color: inherit;
-        display: flex;
-        flex-direction: column;
-        gap: 0.4rem;
-        transition: background 0.15s;
-      }
-      .card:hover { background: #fff; }
-      .card-name {
-        font-size: 0.95rem;
-        font-weight: 500;
-        color: #111;
-      }
-      .card-slug {
-        font-size: 0.65rem;
-        letter-spacing: 0.15em;
-        color: #aaa;
-      }
-      .card-arrow {
-        margin-top: 1rem;
-        font-size: 0.8rem;
-        color: #bbb;
-      }
-    </style>
-  </head>
-  <body>
-    <h1>Modelos 3D</h1>
-    <div class="grid">
+<MainLayout title="Modelos 3D" description="Explore os modelos 3D dos geradores Infinity em realidade aumentada.">
+  <div class="bg-primary py-12 lg:py-16">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+      <h1 class="font-display font-bold text-3xl sm:text-4xl text-white mb-4">
+        Modelos 3D
+      </h1>
+      <p class="text-white/70">
+        Explore nossos produtos em realidade aumentada
+      </p>
+    </div>
+  </div>
+
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
       {models.map((m) => (
-        <a class="card" href={`/modelo/${m.slug}`}>
-          <span class="card-name">{m.name}</span>
-          <span class="card-slug">/modelo/{m.slug}</span>
-          <span class="card-arrow">→</span>
+        <a 
+          href={`/modelo/${m.slug}`}
+          class="card p-6 group flex flex-col items-center text-center hover:border-accent border-2 border-transparent transition-all duration-300"
+        >
+          <div class="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mb-4 group-hover:bg-accent/10 transition-colors">
+            <svg class="w-12 h-12 text-gray-light group-hover:text-accent transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M14 10l-2 1m0 0l-2-1m2 1v2.5M20 7l-2 1m2-1l-2-1m2 1v2.5M14 4l-2-1-2 1M4 7l2-1M4 7l2 1M4 7v2.5M12 21l-2-1m2 1l2-1m-2 1v-2.5M6 18l-2-1v-2.5M18 18l2-1v-2.5"/>
+            </svg>
+          </div>
+          <h2 class="font-display font-semibold text-lg mb-2 group-hover:text-accent transition-colors">
+            {m.name}
+          </h2>
+          <p class="text-gray text-sm mb-4">
+            Visualize em 3D
+          </p>
+          <span class="text-accent font-medium text-sm flex items-center gap-1">
+            Abrir visualizador
+            <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+            </svg>
+          </span>
         </a>
       ))}
     </div>
-  </body>
-</html>
+
+    {models.length === 0 && (
+      <div class="text-center py-16">
+        <svg class="w-20 h-20 mx-auto text-gray-light mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M14 10l-2 1m0 0l-2-1m2 1v2.5M20 7l-2 1m2-1l-2-1m2 1v2.5M14 4l-2-1-2 1M4 7l2-1M4 7l2 1M4 7v2.5M12 21l-2-1m2 1l2-1m-2 1v-2.5M6 18l-2-1v-2.5M18 18l2-1v-2.5"/>
+        </svg>
+        <h3 class="font-display font-semibold text-xl mb-2">Nenhum modelo disponível</h3>
+        <p class="text-gray">Novos modelos serão adicionados em breve.</p>
+      </div>
+    )}
+  </div>
+</MainLayout>
