@@ -244,32 +244,26 @@ if (!model) {
       const loader = new GLTFLoader();
       loader.setDRACOLoader(draco);
 
-      // Try to load model, fallback to demo cube on error
+      // Demo scene - smaller cube
       function createDemoScene() {
-        console.log("Creating demo scene with cube");
+        console.log("Creating demo scene with smaller cube");
         
-        const geometry = new THREE.BoxGeometry(1, 1, 1);
+        const geometry = new THREE.BoxGeometry(0.5, 0.5, 0.5);
         const material = new THREE.MeshStandardMaterial({ 
           color: 0xEDC531,
           roughness: 0.3,
           metalness: 0.8
         });
         const cube = new THREE.Mesh(geometry, material);
-        cube.position.y = 0.5;
+        cube.position.y = 0.25;
         cube.castShadow = true;
         cube.receiveShadow = true;
         scene.add(cube);
 
-        // Add Infinity logo plane
-        const logoGeo = new THREE.CircleGeometry(0.3, 32);
-        const logoMat = new THREE.MeshStandardMaterial({ 
-          color: 0x131313,
-          side: THREE.DoubleSide
-        });
-        const logo = new THREE.Mesh(logoGeo, logoMat);
-        logo.position.set(0, 1.2, 0);
-        logo.rotation.x = -Math.PI / 4;
-        scene.add(logo);
+        // Camera closer for smaller object
+        camera.position.set(2, 1.5, 2);
+        controls.target.set(0, 0.25, 0);
+        controls.update();
 
         loading.classList.add("hidden");
         setTimeout(() => hint?.classList.add("hidden"), 4000);
@@ -290,9 +284,10 @@ if (!model) {
           
           console.log("Model size:", size, "center:", center);
           
-          // Scale to fit
+          // Scale to fit (smaller size - max 1.5 units)
           const maxDim = Math.max(size.x, size.y, size.z);
-          const scale = maxDim > 0 ? 2 / maxDim : 1;
+          const targetSize = 1.5;
+          const scale = maxDim > 0 ? targetSize / maxDim : 1;
           loadedModel.scale.setScalar(scale);
           
           // Center
@@ -310,10 +305,9 @@ if (!model) {
 
           scene.add(loadedModel);
 
-          // Update camera
-          const dist = Math.max(size.x, size.y, size.z) * 2;
-          camera.position.set(dist * 0.5, dist * 0.5, dist * 0.7);
-          controls.target.set(0, size.y * scale / 2, 0);
+          // Camera position (further for smaller model)
+          camera.position.set(3, 2, 3);
+          controls.target.set(0, targetSize / 2, 0);
           controls.update();
 
           loading.classList.add("hidden");
