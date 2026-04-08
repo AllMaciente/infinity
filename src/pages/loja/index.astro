@@ -6,7 +6,7 @@ import CategoryFilter from "../../components/CategoryFilter.astro";
 import Pagination from "../../components/Pagination.astro";
 import products from "../../data/products.json";
 
-const ITEMS_PER_PAGE = 9;
+const ITEMS_PER_PAGE = 6;
 
 const url = Astro.url;
 const searchQuery = url.searchParams.get("q")?.toLowerCase() || "";
@@ -60,12 +60,13 @@ const title = searchQuery
         {filteredProducts.length} produto{
           filteredProducts.length !== 1 ? "s" : ""
         } encontrado{filteredProducts.length !== 1 ? "s" : ""}
+        {currentPage > 1 && ` (página ${currentPage} de ${totalPages})`}
       </p>
     </div>
   </div>
 
-  <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 p-10">
-    <div class="flex flex-col lg:flex-row gap-8 mb-8 p-10">
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="flex flex-col lg:flex-row gap-8 mb-8">
       <div class="lg:w-80 flex-shrink-0">
         <div class="sticky top-24 space-y-6">
           <div>
@@ -120,7 +121,8 @@ const title = searchQuery
               <Pagination
                 currentPage={currentPage}
                 totalPages={totalPages}
-                baseUrl="/loja"
+                searchQuery={searchQuery}
+                activeCategory={activeCategory}
               />
             </div>
           )

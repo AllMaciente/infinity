@@ -2,10 +2,11 @@
 interface Props {
   currentPage: number;
   totalPages: number;
-  baseUrl?: string;
+  searchQuery?: string;
+  activeCategory?: string;
 }
 
-const { currentPage, totalPages, baseUrl = '/loja' } = Astro.props;
+const { currentPage, totalPages, searchQuery = '', activeCategory = '' } = Astro.props;
 
 const prevPage = currentPage > 1 ? currentPage - 1 : null;
 const nextPage = currentPage < totalPages ? currentPage + 1 : null;
@@ -24,14 +25,27 @@ if (totalPages <= 7) {
 }
 
 function getPageUrl(page: number): string {
-  const url = new URL(baseUrl, Astro.url.origin);
-  url.searchParams.set('pagina', page.toString());
-  return url.pathname + url.search;
+  const params = new URLSearchParams();
+  
+  if (page > 1) {
+    params.set('pagina', page.toString());
+  }
+  
+  if (searchQuery) {
+    params.set('q', searchQuery);
+  }
+  
+  if (activeCategory) {
+    params.set('categoria', activeCategory);
+  }
+  
+  const queryString = params.toString();
+  return queryString ? `/loja?${queryString}` : '/loja';
 }
 ---
 
 {totalPages > 1 && (
-  <nav class="flex items-center justify-center gap-2" aria-label="Paginação">
+  <nav class="flex items-center justify-center gap-1" aria-label="Paginação">
     <a 
       href={prevPage ? getPageUrl(prevPage) : '#'}
       class={`p-2 rounded-lg transition-colors ${
@@ -53,7 +67,7 @@ function getPageUrl(page: number): string {
       ) : (
         <a 
           href={getPageUrl(page)}
-          class={`w-10 h-10 rounded-lg flex items-center justify-center font-medium transition-colors ${
+          class={`min-w-[40px] h-10 px-3 rounded-lg flex items-center justify-center font-medium transition-colors ${
             page === currentPage
               ? 'bg-accent text-primary'
               : 'hover:bg-gray-100 text-secondary'
