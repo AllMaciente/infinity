@@ -1,0 +1,76 @@
+---
+// src/pages/index.astro
+import { models } from '../../data/models.ts';
+---
+
+<!DOCTYPE html>
+<html lang="pt">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Modelos 3D</title>
+    <style>
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+      body {
+        font-family: system-ui, sans-serif;
+        background: #f8f7f5;
+        min-height: 100vh;
+        padding: 4rem 2rem;
+      }
+      h1 {
+        font-size: 0.7rem;
+        font-weight: 600;
+        letter-spacing: 0.25em;
+        text-transform: uppercase;
+        color: #999;
+        margin-bottom: 3rem;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 1px;
+        background: #e5e5e5;
+        border: 1px solid #e5e5e5;
+        max-width: 900px;
+      }
+      .card {
+        background: #f8f7f5;
+        padding: 2rem 1.5rem;
+        text-decoration: none;
+        color: inherit;
+        display: flex;
+        flex-direction: column;
+        gap: 0.4rem;
+        transition: background 0.15s;
+      }
+      .card:hover { background: #fff; }
+      .card-name {
+        font-size: 0.95rem;
+        font-weight: 500;
+        color: #111;
+      }
+      .card-slug {
+        font-size: 0.65rem;
+        letter-spacing: 0.15em;
+        color: #aaa;
+      }
+      .card-arrow {
+        margin-top: 1rem;
+        font-size: 0.8rem;
+        color: #bbb;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Modelos 3D</h1>
+    <div class="grid">
+      {models.map((m) => (
+        <a class="card" href={`/modelo/${m.slug}`}>
+          <span class="card-name">{m.name}</span>
+          <span class="card-slug">/modelo/{m.slug}</span>
+          <span class="card-arrow">→</span>
+        </a>
+      ))}
+    </div>
+  </body>
+</html>

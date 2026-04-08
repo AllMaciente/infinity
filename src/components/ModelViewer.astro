@@ -1,0 +1,247 @@
+---
+// src/components/ModelViewer.astro
+export interface Props {
+  src: string;
+  background?: string;
+  name?: string;
+}
+
+const { src, background = "#F8F8F8", name = "" } = Astro.props;
+---
+
+<div id="viewer-wrap">
+  <canvas id="viewer-canvas"></canvas>
+
+  {name && <p id="viewer-name">{name}</p>}
+
+  <p id="viewer-hint">Arraste · Scroll para zoom</p>
+
+  <div id="viewer-loading">
+    <span id="viewer-loading-text">Carregando…</span>
+    <div id="viewer-bar-wrap"><div id="viewer-bar"></div></div>
+  </div>
+</div>
+
+<style>
+  #viewer-wrap {
+    position: fixed;
+    inset: 0;
+  }
+  #viewer-canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+  #viewer-name {
+    position: absolute;
+    top: 1.6rem;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: system-ui, sans-serif;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: rgba(0, 0, 0, 0.35);
+    pointer-events: none;
+    user-select: none;
+    white-space: nowrap;
+  }
+  #viewer-hint {
+    position: absolute;
+    bottom: 1.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: system-ui, sans-serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(0, 0, 0, 0.3);
+    pointer-events: none;
+    user-select: none;
+    transition: opacity 1s;
+    white-space: nowrap;
+  }
+  #viewer-hint.hidden {
+    opacity: 0;
+  }
+
+  #viewer-loading {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.8rem;
+    pointer-events: none;
+  }
+  #viewer-loading.hidden {
+    display: none;
+  }
+  #viewer-loading-text {
+    font-family: system-ui, sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(0, 0, 0, 0.35);
+  }
+  #viewer-bar-wrap {
+    width: 160px;
+    height: 1px;
+    background: rgba(0, 0, 0, 0.1);
+  }
+  #viewer-bar {
+    height: 100%;
+    width: 0%;
+    background: rgba(0, 0, 0, 0.5);
+    transition: width 0.15s;
+  }
+</style>
+
+<script define:vars={{ src, background }}>
+  import * as THREE from "three";
+  import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+  import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+  import { DRACOLoader } from "three/addons/loaders/DRACOLoader.js";
+  import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
+
+  document.getElementById("viewer-wrap").style.background = background;
+
+  const canvas = document.getElementById("viewer-canvas");
+  const hint = document.getElementById("viewer-hint");
+  const loading = document.getElementById("viewer-loading");
+  const bar = document.getElementById("viewer-bar");
+
+  // ── Renderer
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.0;
+  renderer.setClearColor(new THREE.Color(background));
+
+  // ── Scene & Camera
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(
+    42,
+    window.innerWidth / window.innerHeight,
+    0.01,
+    1000,
+  );
+  camera.position.set(0, 0.8, 4);
+
+  // ── Controls
+  const controls = new OrbitControls(camera, canvas);
+  controls.enableDamping = true;
+  controls.dampingFactor = 0.07;
+  controls.minDistance = 0.3;
+  controls.maxDistance = 100;
+
+  // ── Lights
+  scene.add(new THREE.AmbientLight(0xffffff, 1.0));
+  const key = new THREE.DirectionalLight(0xffffff, 2.5);
+  key.position.set(5, 8, 5);
+  key.castShadow = true;
+  key.shadow.mapSize.set(2048, 2048);
+  key.shadow.bias = -0.0003;
+  scene.add(key);
+  scene.add(
+    Object.assign(new THREE.DirectionalLight(0xc8d8ff, 0.7), {
+      position: new THREE.Vector3(-5, 2, -3),
+    }),
+  );
+  scene.add(
+    Object.assign(new THREE.DirectionalLight(0xfff0e0, 0.5), {
+      position: new THREE.Vector3(0, -2, -5),
+    }),
+  );
+
+  // ── Environment PBR
+  const pmrem = new THREE.PMREMGenerator(renderer);
+  scene.environment = pmrem.fromScene(new RoomEnvironment()).texture;
+
+  // ── Shadow floor
+  const floor = new THREE.Mesh(
+    new THREE.PlaneGeometry(200, 200),
+    new THREE.ShadowMaterial({ opacity: 0.12 }),
+  );
+  floor.rotation.x = -Math.PI / 2;
+  floor.receiveShadow = true;
+  scene.add(floor);
+
+  // ── DRACO + GLTF Loaders
+  const draco = new DRACOLoader();
+  draco.setDecoderPath(
+    "https://www.gstatic.com/draco/versioned/decoders/1.5.6/",
+  );
+  const loader = new GLTFLoader();
+  loader.setDRACOLoader(draco);
+
+  loader.load(
+    src,
+    (gltf) => {
+      const model = gltf.scene;
+      model.traverse((child) => {
+        if (child.isMesh) {
+          child.castShadow = true;
+          child.receiveShadow = true;
+        }
+      });
+
+      // Auto-center & auto-scale
+      const box = new THREE.Box3().setFromObject(model);
+      const center = box.getCenter(new THREE.Vector3());
+      const size = box.getSize(new THREE.Vector3());
+      const scale = 2.5 / Math.max(size.x, size.y, size.z);
+      model.scale.setScalar(scale);
+      model.position.sub(center.multiplyScalar(scale));
+
+      const box2 = new THREE.Box3().setFromObject(model);
+      floor.position.y = box2.min.y - 0.001;
+      scene.add(model);
+
+      // Fit camera
+      camera.position.set(
+        0,
+        0.4,
+        2.8 / Math.tan((camera.fov * Math.PI) / 180 / 2),
+      );
+      controls.target.set(0, 0, 0);
+      controls.update();
+
+      loading.classList.add("hidden");
+      setTimeout(() => hint.classList.add("hidden"), 3000);
+    },
+    (xhr) => {
+      if (xhr.lengthComputable && bar)
+        bar.style.width = ((xhr.loaded / xhr.total) * 100).toFixed(0) + "%";
+    },
+    (err) => {
+      loading.innerHTML = `<p style="font-family:system-ui;font-size:.8rem;color:#c00;text-align:center;padding:2rem">
+      ❌ Arquivo não encontrado.<br>
+      <small style="color:#888;display:block;margin-top:.4rem">Verifique se <code>${src}</code> existe em <code>/public</code></small>
+    </p>`;
+      console.error(err);
+    },
+  );
+
+  canvas.addEventListener("pointerdown", () => hint.classList.add("hidden"), {
+    once: true,
+  });
+
+  window.addEventListener("resize", () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  });
+
+  (function animate() {
+    requestAnimationFrame(animate);
+    controls.update();
+    renderer.render(scene, camera);
+  })();
+</script>

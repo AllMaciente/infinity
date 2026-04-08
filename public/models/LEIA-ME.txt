@@ -1,0 +1,6 @@
+Coloque seu arquivo .glb aqui.
+
+Exemplo: produto.glb
+
+Depois referencia no index.astro assim:
+  src="/models/produto.glb"

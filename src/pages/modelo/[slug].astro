@@ -1,0 +1,38 @@
+---
+// src/pages/modelo/[slug].astro
+import { models, getModel } from '../../data/models';
+import ModelViewer from '../../components/ModelViewer.astro';
+
+export function getStaticPaths() {
+  return models.map((m) => ({
+    params: { slug: m.slug },
+  }));
+}
+
+const { slug } = Astro.params;
+const model = getModel(slug!);
+
+if (!model) {
+  return Astro.redirect('/404');
+}
+---
+
+<!DOCTYPE html>
+<html lang="pt">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{model.name}</title>
+    <style>
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+      html, body { width: 100%; height: 100%; overflow: hidden; }
+    </style>
+  </head>
+  <body>
+    <ModelViewer
+      src={model.file}
+      background={model.background ?? "#ffffff"}
+      name={model.name}
+    />
+  </body>
+</html>
