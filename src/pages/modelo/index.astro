@@ -3,8 +3,11 @@ import MainLayout from "../../layouts/MainLayout.astro";
 import { models } from "../../data/models";
 ---
 
-<MainLayout title="Modelos 3D" description="Explore os modelos 3D dos geradores Infinity em realidade aumentada.">
-  <div class="bg-primary py-12 lg:py-16">
+<MainLayout
+  title="Modelos 3D"
+  description="Explore os modelos 3D dos geradores Infinity em realidade aumentada."
+>
+  <div class="bg-primary py-12 lg:py-16 mb-10">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
       <h1 class="font-display font-bold text-3xl sm:text-4xl text-white mb-4">
         Modelos 3D
@@ -17,40 +20,74 @@ import { models } from "../../data/models";
 
   <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-      {models.map((m) => (
-        <a 
-          href={`/modelo/${m.slug}`}
-          class="card p-6 group flex flex-col items-center text-center hover:border-accent border-2 border-transparent transition-all duration-300"
-        >
-          <div class="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mb-4 group-hover:bg-accent/10 transition-colors">
-            <svg class="w-12 h-12 text-gray-light group-hover:text-accent transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M14 10l-2 1m0 0l-2-1m2 1v2.5M20 7l-2 1m2-1l-2-1m2 1v2.5M14 4l-2-1-2 1M4 7l2-1M4 7l2 1M4 7v2.5M12 21l-2-1m2 1l2-1m-2 1v-2.5M6 18l-2-1v-2.5M18 18l2-1v-2.5"/>
-            </svg>
-          </div>
-          <h2 class="font-display font-semibold text-lg mb-2 group-hover:text-accent transition-colors">
-            {m.name}
-          </h2>
-          <p class="text-gray text-sm mb-4">
-            Visualize em 3D
-          </p>
-          <span class="text-accent font-medium text-sm flex items-center gap-1">
-            Abrir visualizador
-            <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
-            </svg>
-          </span>
-        </a>
-      ))}
+      {
+        models.map((m) => (
+          <a
+            href={`/modelo/${m.slug}`}
+            class="card p-6 group flex flex-col items-center text-center hover:border-accent border-2 border-transparent transition-all duration-300"
+          >
+            <div class="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mb-4 group-hover:bg-accent/10 transition-colors">
+              <svg
+                class="w-12 h-12 text-gray-light group-hover:text-accent transition-colors"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="1.5"
+                  d="M14 10l-2 1m0 0l-2-1m2 1v2.5M20 7l-2 1m2-1l-2-1m2 1v2.5M14 4l-2-1-2 1M4 7l2-1M4 7l2 1M4 7v2.5M12 21l-2-1m2 1l2-1m-2 1v-2.5M6 18l-2-1v-2.5M18 18l2-1v-2.5"
+                />
+              </svg>
+            </div>
+            <h2 class="font-display font-semibold text-lg mb-2 group-hover:text-accent transition-colors">
+              {m.name}
+            </h2>
+            <p class="text-gray text-sm mb-4">Visualize em 3D</p>
+            <span class="text-accent font-medium text-sm flex items-center gap-1">
+              Abrir visualizador
+              <svg
+                class="w-4 h-4 group-hover:translate-x-1 transition-transform"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M17 8l4 4m0 0l-4 4m4-4H3"
+                />
+              </svg>
+            </span>
+          </a>
+        ))
+      }
     </div>
 
-    {models.length === 0 && (
-      <div class="text-center py-16">
-        <svg class="w-20 h-20 mx-auto text-gray-light mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M14 10l-2 1m0 0l-2-1m2 1v2.5M20 7l-2 1m2-1l-2-1m2 1v2.5M14 4l-2-1-2 1M4 7l2-1M4 7l2 1M4 7v2.5M12 21l-2-1m2 1l2-1m-2 1v-2.5M6 18l-2-1v-2.5M18 18l2-1v-2.5"/>
-        </svg>
-        <h3 class="font-display font-semibold text-xl mb-2">Nenhum modelo disponível</h3>
-        <p class="text-gray">Novos modelos serão adicionados em breve.</p>
-      </div>
-    )}
+    {
+      models.length === 0 && (
+        <div class="text-center py-16">
+          <svg
+            class="w-20 h-20 mx-auto text-gray-light mb-4"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="1.5"
+              d="M14 10l-2 1m0 0l-2-1m2 1v2.5M20 7l-2 1m2-1l-2-1m2 1v2.5M14 4l-2-1-2 1M4 7l2-1M4 7l2 1M4 7v2.5M12 21l-2-1m2 1l2-1m-2 1v-2.5M6 18l-2-1v-2.5M18 18l2-1v-2.5"
+            />
+          </svg>
+          <h3 class="font-display font-semibold text-xl mb-2">
+            Nenhum modelo disponível
+          </h3>
+          <p class="text-gray">Novos modelos serão adicionados em breve.</p>
+        </div>
+      )
+    }
   </div>
 </MainLayout>
