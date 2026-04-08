@@ -10,10 +10,15 @@ export interface ModelEntry {
 
 export const models: ModelEntry[] = [
   {
+    slug: "g1",
+    name: "Gerador g1",
+    file: "/models/g1.glb",
+  },
+  {
     slug: "gp-mini",
-    name: "Gerador Portátil GP Mini",
+    name: "Gerador gp mine (tests)",
     file: "/models/gp-mini.glb",
-  }
+  },
 ];
 
 export function getModel(slug: string): ModelEntry | undefined {
