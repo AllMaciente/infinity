@@ -2,7 +2,11 @@
 
 Um projeto de e-commerce fictício para uma empresa de geradores de energia magnética, desenvolvido como projeto acadêmico.
 
-## Tecnologias
+## Desenvolvimento
+
+Este projeto foi desenvolvido utilizando **vibe-coding** com [OpenCode](https://opencode.ai) - uma abordagem onde o código é gerado e iterado através de conversação com uma IA, permitindo prototipagem rápida e desenvolvimento assistido.
+
+### Tecnologias
 
 - **Astro** - Framework web moderno
 - **TailwindCSS** - Framework CSS utilitário
@@ -18,21 +22,26 @@ Um projeto de e-commerce fictício para uma empresa de geradores de energia magn
 │   ├── CartDrawer.astro
 │   ├── CategoryFilter.astro
 │   ├── Footer.astro
+│   ├── Logo.astro
 │   ├── Navbar.astro
-│   ├── Pagination.astro
 │   ├── ProductCard.astro
 │   ├── ProductGrid.astro
 │   └── SearchBar.astro
-├── data/               # Arquivos de dados JSON
+├── data/               # Arquivos de dados
 │   ├── company.json     # Dados da empresa
+│   ├── models.ts       # Modelos 3D
 │   └── products.json    # Catálogo de produtos
 ├── layouts/            # Layouts base
+│   ├── BaseLayout.astro
 │   └── MainLayout.astro
 ├── pages/              # Rotas e páginas
 │   ├── index.astro     # Página inicial
-│   └── loja/
-│       ├── index.astro # Catálogo de produtos
-│       └── [slug].astro # Página de produto
+│   ├── loja/
+│   │   ├── index.astro
+│   │   └── [slug].astro
+│   └── modelo/
+│       ├── index.astro
+│       └── [slug].astro
 ├── styles/
 │   └── global.css      # Estilos globais e variáveis CSS
 └── utils/
@@ -40,7 +49,8 @@ Um projeto de e-commerce fictício para uma empresa de geradores de energia magn
 
 /public
 ├── favicon.svg
-└── products/           # Imagens de produtos
+├── products/           # Imagens de produtos
+└── models/             # Modelos 3D (.glb)
 ```
 
 ## Configuração
@@ -67,46 +77,13 @@ Um projeto de e-commerce fictício para uma empresa de geradores de energia magn
 | `npm run preview` | Visualiza versão de produção |
 | `npm run astro` | Executa comandos Astro CLI |
 
-## Personalização
-
-### Alterar Dados da Empresa
-
-Edite `/src/data/company.json` para modificar informações da empresa.
-
-### Alterar Produtos
-
-Edite `/src/data/products.json` para adicionar, remover ou modificar produtos.
-
-### Cores e Tema
-
-As cores são controladas por variáveis CSS em `/src/styles/global.css`:
-
-```css
-:root {
-  --color-primary: #131313;
-  --color-accent: #EDC531;
-  --color-background: #F8F8F8;
-  /* ... */
-}
-```
-
-### Adicionar Imagens de Produtos
-
-Coloque as imagens em `/public/products/` e referencie-as no JSON:
-
-```json
-{
-  "image": "/products/minha-imagem.png"
-}
-```
-
 ## Funcionalidades
 
 - [x] Página inicial com hero e produtos em destaque
 - [x] Catálogo com busca e filtros por categoria
-- [x] Paginação de produtos
 - [x] Página individual de produto
 - [x] Carrinho com localStorage
+- [x] Página de modelos 3D
 - [x] Design responsivo
 - [x] Tema com variáveis CSS
 
