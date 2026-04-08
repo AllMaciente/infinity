@@ -179,13 +179,11 @@ if (!model) {
       const bar = document.getElementById("viewer-bar");
       const errorEl = document.getElementById("viewer-error");
       const errorDetails = document.getElementById("error-details");
-      
-      // Get model path from page
-      const modelSrc = window.location.pathname.includes("/modelo/") 
-        ? `/models/${window.location.pathname.split("/modelo/")[1]}.glb`
-        : "/models/gp-mini.glb";
 
-      console.log("Loading model:", modelSrc);
+      // Get model path from page data
+      const modelSrc = (window as any).__MODEL_SRC__ || "/models/gp-mini.glb";
+
+      console.log("Loading model from:", modelSrc);
 
       // Renderer
       const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
@@ -240,20 +238,51 @@ if (!model) {
       controls.maxDistance = 20;
       controls.target.set(0, 0.5, 0);
 
-      // Load model
+      // Loaders
       const draco = new DRACOLoader();
       draco.setDecoderPath("https://www.gstatic.com/draco/versioned/decoders/1.5.6/");
       const loader = new GLTFLoader();
       loader.setDRACOLoader(draco);
 
+      // Try to load model, fallback to demo cube on error
+      function createDemoScene() {
+        console.log("Creating demo scene with cube");
+        
+        const geometry = new THREE.BoxGeometry(1, 1, 1);
+        const material = new THREE.MeshStandardMaterial({ 
+          color: 0xEDC531,
+          roughness: 0.3,
+          metalness: 0.8
+        });
+        const cube = new THREE.Mesh(geometry, material);
+        cube.position.y = 0.5;
+        cube.castShadow = true;
+        cube.receiveShadow = true;
+        scene.add(cube);
+
+        // Add Infinity logo plane
+        const logoGeo = new THREE.CircleGeometry(0.3, 32);
+        const logoMat = new THREE.MeshStandardMaterial({ 
+          color: 0x131313,
+          side: THREE.DoubleSide
+        });
+        const logo = new THREE.Mesh(logoGeo, logoMat);
+        logo.position.set(0, 1.2, 0);
+        logo.rotation.x = -Math.PI / 4;
+        scene.add(logo);
+
+        loading.classList.add("hidden");
+        setTimeout(() => hint?.classList.add("hidden"), 4000);
+      }
+
       loader.load(
         modelSrc,
         (gltf) => {
           console.log("Model loaded successfully!");
-          const model = gltf.scene;
+          const loadedModel = gltf.scene;
           
           // Calculate bounding box
-          const box = new THREE.Box3().setFromObject(model);
+          const box = new THREE.Box3().setFromObject(loadedModel);
           const size = new THREE.Vector3();
           const center = new THREE.Vector3();
           box.getSize(size);
@@ -264,22 +293,22 @@ if (!model) {
           // Scale to fit
           const maxDim = Math.max(size.x, size.y, size.z);
           const scale = maxDim > 0 ? 2 / maxDim : 1;
-          model.scale.setScalar(scale);
+          loadedModel.scale.setScalar(scale);
           
           // Center
-          model.position.x = -center.x * scale;
-          model.position.y = -box.min.y * scale;
-          model.position.z = -center.z * scale;
+          loadedModel.position.x = -center.x * scale;
+          loadedModel.position.y = -box.min.y * scale;
+          loadedModel.position.z = -center.z * scale;
           
           // Apply materials
-          model.traverse((child) => {
+          loadedModel.traverse((child) => {
             if (child.isMesh) {
               child.castShadow = true;
               child.receiveShadow = true;
             }
           });
 
-          scene.add(model);
+          scene.add(loadedModel);
 
           // Update camera
           const dist = Math.max(size.x, size.y, size.z) * 2;
@@ -287,7 +316,6 @@ if (!model) {
           controls.target.set(0, size.y * scale / 2, 0);
           controls.update();
 
-          // Hide loading
           loading.classList.add("hidden");
           setTimeout(() => hint?.classList.add("hidden"), 4000);
         },
@@ -297,12 +325,8 @@ if (!model) {
           }
         },
         (err) => {
-          console.error("Model load error:", err);
-          loading.classList.add("hidden");
-          errorEl?.classList.remove("hidden");
-          if (errorDetails) {
-            errorDetails.textContent = `Arquivo: ${modelSrc}`;
-          }
+          console.warn("Model load failed, showing demo scene:", err);
+          createDemoScene();
         }
       );
 
