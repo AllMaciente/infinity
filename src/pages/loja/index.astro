@@ -3,15 +3,11 @@ import MainLayout from "../../layouts/MainLayout.astro";
 import ProductGrid from "../../components/ProductGrid.astro";
 import SearchBar from "../../components/SearchBar.astro";
 import CategoryFilter from "../../components/CategoryFilter.astro";
-import Pagination from "../../components/Pagination.astro";
 import products from "../../data/products.json";
-
-const ITEMS_PER_PAGE = 6;
 
 const url = Astro.url;
 const searchQuery = url.searchParams.get("q")?.toLowerCase() || "";
 const activeCategory = url.searchParams.get("categoria") || "";
-const currentPage = parseInt(url.searchParams.get("pagina") || "1");
 
 let filteredProducts = [...products];
 
@@ -36,13 +32,6 @@ const categories = [...new Set(products.map((p) => p.category))].map((cat) => ({
   count: products.filter((p) => p.category === cat).length,
 }));
 
-const totalPages = Math.ceil(filteredProducts.length / ITEMS_PER_PAGE);
-const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-const paginatedProducts = filteredProducts.slice(
-  startIndex,
-  startIndex + ITEMS_PER_PAGE,
-);
-
 const title = searchQuery
   ? `Busca: "${searchQuery}"`
   : activeCategory
@@ -60,13 +49,12 @@ const title = searchQuery
         {filteredProducts.length} produto{
           filteredProducts.length !== 1 ? "s" : ""
         } encontrado{filteredProducts.length !== 1 ? "s" : ""}
-        {currentPage > 1 && ` (página ${currentPage} de ${totalPages})`}
       </p>
     </div>
   </div>
 
   <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
-    <div class="flex flex-col lg:flex-row gap-8 mb-8">
+    <div class="flex flex-col lg:flex-row gap-8">
       <div class="lg:w-80 flex-shrink-0">
         <div class="sticky top-24 space-y-6">
           <div>
@@ -113,20 +101,7 @@ const title = searchQuery
       </div>
 
       <div class="flex-1">
-        <ProductGrid products={paginatedProducts} columns={3} />
-
-        {
-          filteredProducts.length > ITEMS_PER_PAGE && (
-            <div class="mt-12">
-              <Pagination
-                currentPage={currentPage}
-                totalPages={totalPages}
-                searchQuery={searchQuery}
-                activeCategory={activeCategory}
-              />
-            </div>
-          )
-        }
+        <ProductGrid products={filteredProducts} columns={3} />
       </div>
     </div>
   </div>
