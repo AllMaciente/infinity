@@ -16,7 +16,7 @@ export const models: ModelEntry[] = [
   },
   {
     slug: "gp-mini",
-    name: "Gerador gp mine (tests)",
+    name: "Gerador gp mini",
     file: "/models/gp-mini.glb",
   },
 ];
