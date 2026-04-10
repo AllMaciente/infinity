@@ -14,11 +14,11 @@ export const models: ModelEntry[] = [
     name: "Gerador g1",
     file: "/models/g1.glb",
   },
-  {
-    slug: "gp-mini",
-    name: "Gerador gp mini",
-    file: "/models/gp-mini.glb",
-  },
+ ///{
+    //slug: "gp-mini",
+    //name: "Gerador gp mini",
+    //file: "/models/gp-mini.glb",
+  //},
 ];
 
 export function getModel(slug: string): ModelEntry | undefined {
