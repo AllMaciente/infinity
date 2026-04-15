@@ -32,7 +32,7 @@ if (!model) {
       <span>Voltar</span>
     </a>
 
-    <div id="viewer-wrap">
+    <div id="viewer-wrap" data-model-src={model.file}>
       <canvas id="viewer-canvas"></canvas>
       <p id="viewer-name">{model.name}</p>
       <p id="viewer-hint">Arraste para rotacionar · Scroll para zoom</p>
@@ -180,8 +180,9 @@ if (!model) {
       const errorEl = document.getElementById("viewer-error");
       const errorDetails = document.getElementById("error-details");
 
-      // Get model path from page data
-      const modelSrc = (window as any).__MODEL_SRC__ || "/models/gp-mini.glb";
+      // Get model path from data attribute
+      const viewerWrap = document.getElementById("viewer-wrap");
+      const modelSrc = viewerWrap?.dataset.modelSrc || "/models/g1.glb";
 
       console.log("Loading model from:", modelSrc);
 
